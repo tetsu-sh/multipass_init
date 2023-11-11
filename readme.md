@@ -1,0 +1,2 @@
+- portforward無いと厳しそう
+- mysql5.7が立ち上がらない

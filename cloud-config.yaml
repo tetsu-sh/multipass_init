@@ -1,0 +1,45 @@
+#cloud-config
+
+locale: en_US.UTF8
+timezone: Asia/Tokyo
+
+users:
+  - default
+  - name: ubuntu
+    groups: users, docker
+    sudo: ALL=(ALL) NOPASSWD:ALL
+package_upgrade: true
+packages:
+  - curl
+  - zip
+  - jq
+  - ca-certificates
+  - gnupg
+  - lsb-release
+
+runcmd:
+  - apt-get -y update
+  - apt-get -yV upgrade
+  - apt-get install -y vim build-essential sysstat wget
+  - apt-get install -y zsh
+  - chsh -s $(which zsh)
+  - apt-get install -y git
+  - apt install -y mysql-client
+  # docker
+  - mkdir -p /etc/apt/keyrings 
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg 
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null 
+  - apt-get update && apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+  - systemctl enable docker
+  - systemctl start docker
+  - apt install -y qemu qemu-user-static
+  # python
+  - apt install -y python3-dev build-essential default-libmysqlclient-dev
+  # - apt install -y libssl1.1 libssl1.1=1.1.1f-1ubuntu2 libssl-dev libmysqlclient-dev
+  - apt install -y bzip2 libffi-dev lzma lzma-dev libreadline-dev libbz2-dev liblzma-dev
+  - apt install libsqlite3-dev
+  # ここからマニュアル
+  - git clone https://github.com/pyenv/pyenv.git ~/.pyenv && cd ~/.pyenv && src/configure && make -C src
+  - curl -sSL https://install.python-poetry.org | python3 -
+  # rust
+  - curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh

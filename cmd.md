@@ -1,0 +1,9 @@
+- multipass launch --name m --cpus 4 --memory 6G --disk 256G --cloud-init cloud-config.yaml 20.04
+- multipass launch --name a --cpus 4 --memory 6G --disk 256G --cloud-init cloud-config.yaml 20.04
+- multipass mount $HOME/workspace/own m:/home/ubuntu/workspace/own
+- multipass mount $HOME/workspace/own a:/home/ubuntu/workspace/own
+- multipass mount $HOME/workspace/m m:/home/ubuntu/workspace/m
+- multipass mount $HOME/workspace/a a:/home/ubuntu/workspace/a
+- multipass mount $HOME/.ssh m:/home/ubuntu/.ssh;
+- multipass mount $HOME/.ssh a:/home/ubuntu/.ssh;
+- multipass forward vm 8080 8080
